@@ -1,17 +1,35 @@
+import java.util.ArrayList;
+import java.util.List;
+
 class User {
     private String name;
     private int age;
-    private final int id;
+    private final String id;
+    private List<CarbonConsumption> carbonConsumption;
 
-    public User(String name, int age, int id) {
+    public User(String name, int age, String id) {
         this.name = name;
         this.age = age;
         this.id = id;
+        carbonConsumption = new ArrayList<CarbonConsumption>();
     }
+
+    public void addCarbonConsumption(CarbonConsumption consumption) {
+        this.carbonConsumption.add(consumption);
+    }
+
+    public List<CarbonConsumption> getCarbonConsumption() {
+        return carbonConsumption;
+    }
+
+    public void setCarbonConsumption(List<CarbonConsumption> carbonConsumption) {
+        this.carbonConsumption = carbonConsumption;
+    }
+
     public int getAge() {
         return age;
     }
-    public int getId() {
+    public String getId() {
         return id;
     }
 
