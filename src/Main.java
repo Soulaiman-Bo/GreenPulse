@@ -1,3 +1,4 @@
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -7,7 +8,7 @@ import java.util.*;
 public class Main {
 
     private static Scanner scanner = new Scanner(System.in);
-    private static UserManager userManager = new UserManager();
+    private static UserService userService = new UserService();
 
     public static void main(String[] args) {
 
@@ -115,7 +116,7 @@ public class Main {
         int age = scanner.nextInt();
         scanner.nextLine();
 
-        String id = userManager.createAccount(name, age);
+        String id = userService.createAccount(name, age);
         System.out.println("Your account ID is: " + id);
     }
 
@@ -123,7 +124,7 @@ public class Main {
         System.out.print("Enter user ID to modify: ");
         String id = scanner.nextLine();
 
-        if (!userManager.userExists(id)) {
+        if (!userService.userExists(id)) {
             System.out.println("User not found.");
             return;
         }
@@ -134,31 +135,31 @@ public class Main {
         int newAge = scanner.nextInt();
         scanner.nextLine();
 
-        userManager.modifyAccount(id, newName, newAge);
+        userService.modifyAccount(id, newName, newAge);
     }
 
     private static void deleteAccount(){
         System.out.print("Enter user ID to delete: ");
         String id = scanner.nextLine();
 
-        if (!userManager.userExists(id)) {
+        if (!userService.userExists(id)) {
             System.out.println("User not found.");
             return;
         }
 
-        userManager.deleteAccount(id);
+        userService.deleteAccount(id);
     }
 
     private static void displayAllAccounts(){
         System.out.println("\nusers list:  ");
-        userManager.displayAllAccounts();
+        userService.displayAllAccounts();
     }
 
     private static void addCarbonConsumption(){
         System.out.print("Enter user ID to add: ");
         String id = scanner.nextLine();
 
-        if (!userManager.userExists(id)) {
+        if (!userService.userExists(id)) {
             System.out.println("User not found.");
             return;
         }
@@ -166,16 +167,21 @@ public class Main {
         System.out.print("Enter Carbon consumption: ");
         String carbon = scanner.nextLine();
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
-        System.out.println("Enter Start date and time (yyyy-MM-dd HH:mm):");
+        System.out.println("Enter Start date and time (yyyy-MM-dd):");
         String startDate = scanner.nextLine();
 
-        System.out.println("Enter End date and time (yyyy-MM-dd HH:mm):");
+        System.out.println("Enter End date and time (yyyy-MM-dd):");
         String endDate = scanner.nextLine();
 
-        CarbonConsumption consumption1 = new CarbonConsumption(Integer.parseInt(carbon), LocalDateTime.parse(startDate, formatter), LocalDateTime.parse(endDate, formatter));
-        userManager.addCarbonConsumption(id, consumption1);
+        CarbonConsumption consumption1 = new CarbonConsumption(
+                Integer.parseInt(carbon),
+                LocalDate.parse(startDate, formatter),
+                LocalDate.parse(endDate, formatter),
+                id);
+
+        userService.addCarbonConsumption(id, consumption1);
 
     }
 
@@ -183,23 +189,23 @@ public class Main {
         System.out.print("Enter user ID: ");
         String id = scanner.nextLine();
 
-        if (!userManager.userExists(id)) {
+        if (!userService.userExists(id)) {
             System.out.println("User not found.");
             return;
         }
-        userManager.getTotalConsumptionVolume(id);
+        userService.getTotalConsumptionVolume(id);
     }
 
     private static void getAllCarbonConsumptions(){
         System.out.print("Enter user ID: ");
         String id = scanner.nextLine();
 
-        if (!userManager.userExists(id)) {
+        if (!userService.userExists(id)) {
             System.out.println("User not found.");
             return;
         }
 
-        List<CarbonConsumption> consumptions = userManager.getConsumptions(id);
+        List<CarbonConsumption> consumptions = userService.getConsumptions(id);
 
 
         for (CarbonConsumption c : consumptions) {
@@ -216,7 +222,7 @@ public class Main {
         System.out.print("Enter user ID: ");
         String id = scanner.nextLine();
 
-        if (!userManager.userExists(id)) {
+        if (!userService.userExists(id)) {
             System.out.println("User not found.");
             return;
         }
@@ -235,13 +241,13 @@ public class Main {
 
             switch (choice) {
                 case 1:
-                    userManager.getConsumptionReportDaily(id);
+                    userService.getConsumptionReportDaily(id);
                     break;
                 case 2:
-                    userManager.getConsumptionReportWeekly(id);
+                    userService.getConsumptionReportWeekly(id);
                     break;
                 case 3:
-                    userManager.getConsumptionReportMonthly(id);
+                    userService.getConsumptionReportMonthly(id);
                     break;
 
                 case 4:
@@ -253,7 +259,5 @@ public class Main {
         }
 
     }
-
-
 
 }

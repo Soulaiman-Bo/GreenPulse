@@ -12,8 +12,8 @@ public class CarbonConsumptionReportCalculator {
         Map<LocalDate, Double> dailyVolumes = new TreeMap<>();
 
         for (CarbonConsumption consumption : consumptions) {
-            LocalDate startDate = consumption.getStartDate().toLocalDate();
-            LocalDate endDate = consumption.getEndDate().toLocalDate();
+            LocalDate startDate = consumption.getStartDate();
+            LocalDate endDate = consumption.getEndDate();
             long days = ChronoUnit.DAYS.between(startDate, endDate) + 1;
             double dailyVolume = (double) consumption.getVolume() / days;
 
@@ -29,8 +29,8 @@ public class CarbonConsumptionReportCalculator {
         Map<YearMonth, Double> monthlyVolumes = new TreeMap<>();
 
         for (CarbonConsumption consumption : consumptions) {
-            LocalDateTime startDate = consumption.getStartDate();
-            LocalDateTime endDate = consumption.getEndDate();
+            LocalDate startDate = consumption.getStartDate();
+            LocalDate endDate = consumption.getEndDate();
             double totalDays = ChronoUnit.DAYS.between(startDate, endDate) + 1;
             double dailyVolume = consumption.getVolume() / totalDays;
 
@@ -57,12 +57,12 @@ public class CarbonConsumptionReportCalculator {
         WeekFields weekFields = WeekFields.of(Locale.getDefault());
 
         for (CarbonConsumption consumption : consumptions) {
-            LocalDate startDate = consumption.getStartDate().toLocalDate();
-            LocalDate endDate = consumption.getEndDate().toLocalDate();
+            LocalDate startDate = consumption.getStartDate();
+            LocalDate endDate = consumption.getEndDate();
             double totalDays = ChronoUnit.DAYS.between(startDate, endDate) + 1;
             double dailyConsumption = consumption.getVolume() / totalDays;
 
-            LocalDate currentDate = startDate;
+            LocalDate currentDate = startDate; // start of the consumption period
             while (!currentDate.isAfter(endDate)){
                 int weekNumber = currentDate.get(weekFields.weekOfYear());
                 int year = currentDate.getYear();
@@ -87,3 +87,4 @@ public class CarbonConsumptionReportCalculator {
     }
 
 }
+

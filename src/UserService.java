@@ -2,7 +2,7 @@ import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.*;
 
-class UserManager {
+class UserService {
     private final Map<String, User> users = new HashMap<>();
 
     public String createAccount(String name, int age) {
@@ -40,7 +40,7 @@ class UserManager {
 
     public void addCarbonConsumption(String id, CarbonConsumption consumption) {
         User user = users.get(id);
-        user.addCarbonConsumption(consumption);
+        user.getCarbonConsumption().add(consumption);
     }
 
     public List<CarbonConsumption> getConsumptions(String id) {

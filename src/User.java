@@ -14,10 +14,6 @@ class User {
         carbonConsumption = new ArrayList<CarbonConsumption>();
     }
 
-    public void addCarbonConsumption(CarbonConsumption consumption) {
-        this.carbonConsumption.add(consumption);
-    }
-
     public List<CarbonConsumption> getCarbonConsumption() {
         return carbonConsumption;
     }
