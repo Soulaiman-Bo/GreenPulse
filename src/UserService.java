@@ -1,3 +1,6 @@
+import Utils.ConsolePrinter;
+import Utils.DateUtils;
+
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.*;
@@ -40,7 +43,19 @@ class UserService {
 
     public void addCarbonConsumption(String id, CarbonConsumption consumption) {
         User user = users.get(id);
-        user.getCarbonConsumption().add(consumption);
+
+        List<LocalDate> rangeDates =  parseConsumptionIntoDays(getConsumptions(id));
+
+        if(DateUtils.verifyDateExistence(
+               consumption.getStartDate(),
+                consumption.getEndDate(),
+                rangeDates))
+        {
+            user.getCarbonConsumption().add(consumption);
+
+        }else {
+            ConsolePrinter.printError("Date Already Exists.");
+        }
     }
 
     public List<CarbonConsumption> getConsumptions(String id) {
@@ -108,6 +123,16 @@ class UserService {
 
     public boolean userExists(String id) {
         return users.containsKey(id);
+    }
+
+    public static List<LocalDate> parseConsumptionIntoDays(List<CarbonConsumption> consumptions) {
+        List<LocalDate> dates = new ArrayList<>();
+        for(CarbonConsumption c : consumptions){
+            for (LocalDate s_date = c.getStartDate(); !s_date.isAfter(c.getEndDate()); s_date = s_date.plusDays(1)){
+                dates.add(s_date);
+            }
+        }
+        return dates;
     }
 
 }

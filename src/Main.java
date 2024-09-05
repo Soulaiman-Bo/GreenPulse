@@ -1,5 +1,6 @@
+import Utils.ConsolePrinter;
+
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
@@ -7,16 +8,13 @@ import java.util.*;
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 public class Main {
 
-    private static Scanner scanner = new Scanner(System.in);
-    private static UserService userService = new UserService();
+    private static final Scanner scanner = new Scanner(System.in);
+    private static final UserService userService = new UserService();
 
     public static void main(String[] args) {
 
         while (true){
-            System.out.println("1. User Account Management");
-            System.out.println("2. Carbon Fingerprint");
-            System.out.println("3. Exit");
-            System.out.print("Enter your choice: ");
+            ConsolePrinter.mainMenu();
             int choice = scanner.nextInt();
 
             switch (choice) {
@@ -27,26 +25,19 @@ public class Main {
                     carbonFingerPrintManagement();
                     break;
                 case 3:
-                    System.out.println("Exiting...");
+                    ConsolePrinter.printInfo("Exiting...");
                     System.exit(0);
                 default:
-                    System.out.println("Invalid choice. Please try again.");
+                    ConsolePrinter.printError("Invalid choice. Please try again.");
             }
         }
-
 
     }
 
     private static void userAccountManagement(){
         loop:
         while (true){
-            System.out.println("\nUser Account Management");
-            System.out.println("1. Create Account");
-            System.out.println("2. Modify Account");
-            System.out.println("3. Delete Account");
-            System.out.println("4. Display All Accounts");
-            System.out.println("5. Exit");
-            System.out.print("Enter your choice: ");
+            ConsolePrinter.userManagementMenu();
 
             int choice = scanner.nextInt();
             scanner.nextLine(); // Consume newline
@@ -65,10 +56,10 @@ public class Main {
                     displayAllAccounts();
                     break;
                 case 5:
-                    System.out.println("Exiting...");
+                    ConsolePrinter.printInfo("Exiting...");
                     break loop;
                 default:
-                    System.out.println("Invalid choice. Please try again.");
+                    ConsolePrinter.printError("Invalid choice. Please try again.");
             }
         }
     }
@@ -76,14 +67,7 @@ public class Main {
     private static void carbonFingerPrintManagement(){
         carbonLoop:
         while (true){
-            System.out.println("\ncarbon FingerPrint Management");
-            System.out.println("1. Add Carbon Consumption");
-            System.out.println("2. Get Total Carbon Consumption");
-            System.out.println("3. Get All Carbon Consumption");
-            System.out.println("4. Get Carbon Consumption Report");
-            System.out.println("5. Exit");
-            System.out.print("Enter your choice: ");
-
+            ConsolePrinter.carbonMenu();
             int choice = scanner.nextInt();
             scanner.nextLine();
 
@@ -101,31 +85,32 @@ public class Main {
                     getCarbonConsumptionReport();
                     break;
                 case 5:
-                    System.out.println("Exiting...");
+                    ConsolePrinter.printInfo("Exiting...");
                     break carbonLoop;
                 default:
-                    System.out.println("Invalid choice. Please try again.");
+                    ConsolePrinter.printError("Invalid choice. Please try again.");
             }
         }
     }
 
     private static void createAccount(){
-        System.out.println("Entre name: ");
+        System.out.print("  ==> Entre name: ");
         String name = scanner.nextLine();
-        System.out.println("Entre age: ");
+        System.out.print("  ==> Entre age: ");
         int age = scanner.nextInt();
         scanner.nextLine();
 
         String id = userService.createAccount(name, age);
-        System.out.println("Your account ID is: " + id);
+        ConsolePrinter.printInfo("Your account ID is: " + id);
+
     }
 
     private static void modifyAccount(){
-        System.out.print("Enter user ID to modify: ");
+        System.out.print("  ==> Enter user ID to modify: ");
         String id = scanner.nextLine();
 
         if (!userService.userExists(id)) {
-            System.out.println("User not found.");
+            ConsolePrinter.printError("User not found.");
             return;
         }
 
@@ -229,12 +214,7 @@ public class Main {
 
         carbonReport:
         while (true){
-            System.out.println("\ncarbon FingerPrint Management");
-            System.out.println("1. Daily");
-            System.out.println("2. Weekly");
-            System.out.println("3. Monthly");
-            System.out.println("4. Exit");
-            System.out.print("Enter your choice: ");
+            ConsolePrinter.reportMenu();
 
             int choice = scanner.nextInt();
             scanner.nextLine();
@@ -259,5 +239,6 @@ public class Main {
         }
 
     }
+
 
 }
