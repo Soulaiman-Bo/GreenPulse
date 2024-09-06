@@ -1,3 +1,8 @@
+package Services;
+
+import Entities.CarbonConsumption;
+import Entities.User;
+import Utils.CarbonReportCalculator;
 import Utils.ConsolePrinter;
 import Utils.DateUtils;
 
@@ -5,7 +10,7 @@ import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.*;
 
-class UserService {
+public class UserService {
     private final Map<String, User> users = new HashMap<>();
 
     public String createAccount(String name, int age) {
@@ -23,7 +28,7 @@ class UserService {
             user.setAge(age);
             System.out.println("Account modified successfully.");
         } else {
-            System.out.println("User not found.");
+            System.out.println("Entities.User not found.");
         }
     }
 
@@ -31,7 +36,7 @@ class UserService {
         if (users.remove(id) != null) {
             System.out.println("Account deleted successfully.");
         } else {
-            System.out.println("User not found.");
+            System.out.println("Entities.User not found.");
         }
     }
 
@@ -83,7 +88,7 @@ class UserService {
     public void getConsumptionReportDaily(String id){
         List<CarbonConsumption> consumptions = this.getConsumptions(id);
 
-        CarbonConsumptionReportCalculator dailyProcessor = new CarbonConsumptionReportCalculator();
+        CarbonReportCalculator dailyProcessor = new CarbonReportCalculator();
 
         Map<LocalDate, Double> dailyConsumption = dailyProcessor.calculateDailyVolumes(consumptions);
 
@@ -96,7 +101,7 @@ class UserService {
     public void getConsumptionReportMonthly(String id){
         List<CarbonConsumption> consumptions = this.getConsumptions(id);
 
-        CarbonConsumptionReportCalculator MonthlyProcessor = new CarbonConsumptionReportCalculator();
+        CarbonReportCalculator MonthlyProcessor = new CarbonReportCalculator();
 
         Map<YearMonth, Double> monthlyConsumption = MonthlyProcessor.calculateMonthlyVolumes(consumptions);
 
@@ -109,7 +114,7 @@ class UserService {
     public void getConsumptionReportWeekly(String id){
         List<CarbonConsumption> consumptions = this.getConsumptions(id);
 
-        CarbonConsumptionReportCalculator WeeklyProcessor = new CarbonConsumptionReportCalculator();
+        CarbonReportCalculator WeeklyProcessor = new CarbonReportCalculator();
         Map<Integer, Double> weeklyVolumes =  WeeklyProcessor.calculateWeeklyVolumes(consumptions);
 
         for (Map.Entry<Integer, Double> entry : weeklyVolumes.entrySet()) {

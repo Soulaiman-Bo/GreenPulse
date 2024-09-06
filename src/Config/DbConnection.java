@@ -3,23 +3,23 @@ package Config;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-
 public class DbConnection {
 
     private static DbConnection instance;
     private final Connection connection;
 
-    private static final String URL = "jdbc:postgresql://localhost:5432/company_db";
-    private static final String USER = "admin";
-    private static final String PASSWORD = "admin";
+    private static final String URL = "jdbc:postgresql://localhost:5432/javapostgres";
+    private static final String USER = "postgres";
+    private static final String PASSWORD = "postgres";
 
     private DbConnection() throws SQLException {
+        Connection tempConnection = null;
         try {
-            this.connection  =  DriverManager.getConnection(URL, USER, PASSWORD);
+            tempConnection = DriverManager.getConnection(URL, USER, PASSWORD);
         } catch (SQLException e) {
-            throw new SQLException("PostgreSQL Driver not found!", e);
+            e.printStackTrace();
         }
-
+        this.connection = tempConnection;
     }
 
     public static DbConnection getInstance() throws SQLException {
@@ -34,6 +34,5 @@ public class DbConnection {
     public Connection getConnection() {
         return connection;
     }
-
-
 }
+

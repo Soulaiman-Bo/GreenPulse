@@ -1,12 +1,19 @@
+package Utils;
+
+import Entities.CarbonConsumption;
+
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.time.chrono.ChronoLocalDate;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.WeekFields;
-import java.util.*;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.TreeMap;
 
-public class CarbonConsumptionReportCalculator {
 
+public class CarbonReportCalculator {
     public Map<LocalDate, Double> calculateDailyVolumes(List<CarbonConsumption> consumptions) {
         Map<LocalDate, Double> dailyVolumes = new TreeMap<>();
 
@@ -82,8 +89,9 @@ public class CarbonConsumptionReportCalculator {
             }
 
         }
-            return weeklyConsumption;
+        return weeklyConsumption;
     }
-
 }
+
+
 

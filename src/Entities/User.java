@@ -1,7 +1,9 @@
+package Entities;
+
 import java.util.ArrayList;
 import java.util.List;
 
-class User {
+public class User {
     private String name;
     private int age;
     private final String id;
