@@ -1,19 +1,24 @@
 package Entities;
 
+import Entities.enums.ConsumptionType;
+
 import java.time.LocalDate;
 
-public class CarbonConsumption {
+public abstract class CarbonConsumption {
 
-    private int volume;
+    private Double volume;
     private LocalDate startDate;
     private LocalDate endDate;
-    private String userId;
+    private int userId;
 
-    public CarbonConsumption(int volume, LocalDate startDate, LocalDate endDate, String userId) {
+    private ConsumptionType consumptionType;
+
+    public CarbonConsumption(Double volume, LocalDate startDate, LocalDate endDate, Integer userId, ConsumptionType consumptionType) {
         this.volume = volume;
         this.startDate = startDate;
         this.endDate = endDate;
         this.userId = userId;
+        this.consumptionType = consumptionType;
     }
 
     public LocalDate getStartDate() {
@@ -24,11 +29,11 @@ public class CarbonConsumption {
         this.startDate = startDate;
     }
 
-    public int getVolume() {
+    public Double getVolume() {
         return volume;
     }
 
-    public void setVolume(int volume) {
+    public void setVolume(Double volume) {
         this.volume = volume;
     }
 
@@ -40,12 +45,32 @@ public class CarbonConsumption {
         this.endDate = endDate;
     }
 
-    public String getUserId() {
+    public Integer getUserId() {
         return userId;
     }
 
-    public void setUserId(String userId) {
+    public void setUserId(Integer userId) {
         this.userId = userId;
     }
 
+    public ConsumptionType getConsumptionType() {
+        return consumptionType;
+    }
+
+    public void setConsumptionType(ConsumptionType consumptionType) {
+        this.consumptionType = consumptionType;
+    }
+
+    public abstract Integer calculateImpact();
+
+    @Override
+    public String toString() {
+        return "CarbonConsumption{" +
+                "volume=" + volume +
+                ", startDate=" + startDate +
+                ", endDate=" + endDate +
+                ", userId=" + userId +
+                ", consumptionType=" + consumptionType +
+                '}';
+    }
 }
