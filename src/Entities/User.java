@@ -4,16 +4,36 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class User {
-    private String name;
-    private int age;
-    private final String id;
+    private String full_name;
+    private String email;
+    private Integer id;
     private List<CarbonConsumption> carbonConsumption;
 
-    public User(String name, int age, String id) {
-        this.name = name;
-        this.age = age;
+    public User(String full_name, String email, Integer id) {
+        this.full_name = full_name;
+        this.email = email;
         this.id = id;
         carbonConsumption = new ArrayList<CarbonConsumption>();
+    }
+
+    public String getFull_name() {
+        return full_name;
+    }
+
+    public void setFull_name(String full_name) {
+        this.full_name = full_name;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public Integer getId() {
+        return id;
     }
 
     public List<CarbonConsumption> getCarbonConsumption() {
@@ -24,27 +44,9 @@ public class User {
         this.carbonConsumption = carbonConsumption;
     }
 
-    public int getAge() {
-        return age;
-    }
-    public String getId() {
-        return id;
-    }
-
-
-    public String getName() {
-        return name;
-    }
-    public void setName(String name) {
-        this.name = name;
-    }
-    public void setAge(int age) {
-        this.age = age;
-    }
-
     @Override
     public String toString() {
-        return "{ name = '" + name + "', age = " + age + ", id = '" + id + "' }";
+        String printed = "==> Email: " + getEmail() + "\n==> FullName: " + getFull_name() + "\n==> ID: " + getId() + "\n--------------------> \n";
+        return printed;
     }
-
 }

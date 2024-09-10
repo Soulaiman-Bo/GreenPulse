@@ -22,7 +22,7 @@ public class ConsolePrinter {
         System.out.println(" |  2. Get Total Carbon Consumption     |");
         System.out.println(" |  3. Get All Carbon Consumption       |");
         System.out.println(" |  4. Get Carbon Consumption Report    |");
-        System.out.println(" | 5. Exit                              |");
+        System.out.println(" |  5. Exit                             |");
         System.out.println(" +--------------------------------------+");
         System.out.print("  ==> Enter your choice: ");
     }
@@ -39,6 +39,18 @@ public class ConsolePrinter {
         System.out.print("  ==> Enter your choice: ");
     }
 
+    public static void ConsumptionTypeMenu(){
+        System.out.println(" +--------------------------------------+");
+        System.out.println(" |            Consumption Type          |");
+        System.out.println(" +--------------------------------------+");
+        System.out.println(" |  1. TRANSPORT                        |");
+        System.out.println(" |  2. HOUSING                          |");
+        System.out.println(" |  3. FOOD                             |");
+        System.out.println(" |  4. Exit                             |");
+        System.out.println(" +--------------------------------------+");
+        System.out.print("  ==> Enter your choice: ");
+    }
+
     public static void mainMenu(){
         System.out.println(" +--------------------------------------+");
         System.out.println(" |        Main Menu                     |");
@@ -46,6 +58,7 @@ public class ConsolePrinter {
         System.out.println(" |  1. User Account Management          |");
         System.out.println(" |  2. Carbon Fingerprint               |");
         System.out.println(" |  3. Exit                             |");
+        System.out.println(" |  4. Test Functions                   |");
         System.out.println(" +--------------------------------------+");
         System.out.print("  ==> Enter your choice: ");
     }
@@ -72,7 +85,7 @@ public class ConsolePrinter {
         String greenText = "\033[0;32m";
         String resetText = "\033[0m";
         System.out.println("\n" + greenText + "--------------------------------------");
-        System.out.println("             " +  message );
+        System.out.println(" " +  message );
         System.out.println("--------------------------------------" + resetText + "\n" );
 
     }

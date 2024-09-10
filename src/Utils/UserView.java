@@ -1,12 +1,15 @@
 package Utils;
 
+
+
 import Services.UserService;
 
 import java.util.Scanner;
 
 public class UserView {
+     static UserService userService = new UserService();
 
-    public static void userAccountManagement( Scanner scanner, UserService userService){
+     public static void userAccountManagement( Scanner scanner){
         loop:
         while (true){
             ConsolePrinter.userManagementMenu();
@@ -37,49 +40,34 @@ public class UserView {
     }
 
     public static void createAccount(Scanner scanner, UserService userService){
-        System.out.print("  ==> Entre name: ");
+        System.out.print("  ==> Entre FullName: ");
         String name = scanner.nextLine();
-        System.out.print("  ==> Entre age: ");
-        int age = scanner.nextInt();
-        scanner.nextLine();
-
-        String id = userService.createAccount(name, age);
-        ConsolePrinter.printInfo("Your account ID is: " + id);
-
+        System.out.print("  ==> Entre Email: ");
+        String email = scanner.nextLine();
+        // scanner.nextLine();
+        userService.createAccount(name, email);
     }
 
     public static void modifyAccount(Scanner scanner, UserService userService){
         System.out.print("  ==> Enter user ID to modify: ");
-        String id = scanner.nextLine();
-
-        if (!userService.userExists(id)) {
-            ConsolePrinter.printError("Entities.User not found.");
-            return;
-        }
-
-        System.out.print("Enter new name: ");
-        String newName = scanner.nextLine();
-        System.out.print("Enter new age: ");
-        int newAge = scanner.nextInt();
+        Integer id = scanner.nextInt();
         scanner.nextLine();
+        System.out.print("  ==> Entre FullName: ");
+        String newName = scanner.nextLine();
+        System.out.print("  ==> Entre Email: ");
+        String newEmail = scanner.nextLine();
 
-        userService.modifyAccount(id, newName, newAge);
+       userService.modifyAccount(newName, newEmail, id);
     }
 
     public static void deleteAccount(Scanner scanner, UserService userService){
-        System.out.print("Enter user ID to delete: ");
-        String id = scanner.nextLine();
-
-        if (!userService.userExists(id)) {
-            System.out.println("Entities.User not found.");
-            return;
-        }
-
+        System.out.print("  ==> Enter user ID to delete: ");
+        Integer id = scanner.nextInt();
         userService.deleteAccount(id);
     }
 
     public static void displayAllAccounts(UserService userService){
-        System.out.println("\nusers list:  ");
         userService.displayAllAccounts();
     }
+
 }

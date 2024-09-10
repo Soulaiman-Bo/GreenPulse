@@ -34,5 +34,19 @@ public class DbConnection {
     public Connection getConnection() {
         return connection;
     }
+
+    public void closeConnection() {
+        if (connection != null) {
+            try {
+                if (!connection.isClosed()) {
+                    connection.close();
+                    System.out.println("Connection closed.");
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
 }
 
