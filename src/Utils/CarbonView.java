@@ -78,7 +78,7 @@ public class CarbonView {
                 Double amount = scanner.nextDouble();
                 scanner.nextLine();
                 System.out.print(" ==> Entre Distance Travelled: ");
-                Integer distanceTravelled = scanner.nextInt();
+                Double distanceTravelled = scanner.nextDouble();
                 scanner.nextLine();
                 System.out.print(" ==> Entre Transport Type: ");
                 String transportType = scanner.nextLine();
@@ -90,7 +90,7 @@ public class CarbonView {
                 Double amountt = scanner.nextDouble();
                 scanner.nextLine();
                 System.out.print("==> Entre Energy Consumption: ");
-                Integer energyConsumption = scanner.nextInt();
+                Double energyConsumption = scanner.nextDouble();
                 scanner.nextLine();
                 System.out.print("==> Entre Housing Type: ");
                 String housingType = scanner.nextLine();

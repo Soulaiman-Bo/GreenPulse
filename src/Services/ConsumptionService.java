@@ -8,12 +8,11 @@ import java.util.Optional;
 
 public abstract class ConsumptionService {
 
-
     public abstract Boolean save(CarbonConsumption consumption) throws SQLException ;
     public abstract Optional<CarbonConsumption> find(Integer userId) throws SQLException ;
     public abstract  Boolean update(CarbonConsumption consumption) throws SQLException ;
     public abstract Boolean delete(Integer user) throws SQLException ;
-    public abstract List<CarbonConsumption> findAll(Integer userId) throws SQLException ;
+    public abstract Optional<List<CarbonConsumption>> findAll(Integer userId) throws SQLException ;
 
 
   //  public void save(CarbonConsumption consumption) {

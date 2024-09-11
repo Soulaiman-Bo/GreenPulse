@@ -10,7 +10,6 @@ public abstract class CarbonConsumption {
     private LocalDate startDate;
     private LocalDate endDate;
     private int userId;
-
     private ConsumptionType consumptionType;
 
     public CarbonConsumption(Double volume, LocalDate startDate, LocalDate endDate, Integer userId, ConsumptionType consumptionType) {
@@ -61,7 +60,7 @@ public abstract class CarbonConsumption {
         this.consumptionType = consumptionType;
     }
 
-    public abstract Integer calculateImpact();
+    public abstract Double calculateImpact();
 
     @Override
     public String toString() {

@@ -1,14 +1,10 @@
 
-import Domain.ConsumptionDAO;
-import Domain.UserDAO;
 import Entities.*;
-import Entities.enums.ConsumptionType;
-import Entities.enums.FoodType;
 import Entities.enums.HousingType;
 import Entities.enums.TransportType;
-import Services.ConsumptionService;
 import Services.FoodService;
-import Services.UserService;
+import Services.HousingService;
+import Services.TransportService;
 import Utils.CarbonView;
 import Utils.ConsolePrinter;
 import Utils.UserView;
@@ -38,9 +34,33 @@ public class Main {
                     ConsolePrinter.printInfo("Exiting...");
                     System.exit(0);
                 case 4:
-                    FoodService foodService = new FoodService();
-                    List<CarbonConsumption> result =  foodService.findAll(10);
-                    System.out.println(result);
+//                    TransportService transportService = new TransportService();
+//
+//                            CarbonConsumption consumption = new Transport(
+//                            22.22,
+//                            33,
+//                            TransportType.TRAIN,
+//                            LocalDate.of(2024, 12, 3),
+//                            LocalDate.of(2024, 11, 3),
+//                            10);
+//
+//                           Boolean result =  transportService.save(consumption);
+//                           System.out.println(result);
+
+                                        HousingService transportService = new HousingService();
+
+                            CarbonConsumption consumption = new Housing(
+                            22.22,
+                            33.2,
+                            HousingType.ELECTRICITY,
+                            LocalDate.of(2024, 12, 3),
+                            LocalDate.of(2024, 11, 3),
+                            10);
+
+                           Boolean result =  transportService.save(consumption);
+                           System.out.println(result);
+                    
+                    
                 default:
                     ConsolePrinter.printError("Invalid choice. Please try again.");
             }
