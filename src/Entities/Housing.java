@@ -1,30 +1,45 @@
 package Entities;
 
 import Entities.enums.ConsumptionType;
+import Entities.enums.FoodType;
 import Entities.enums.HousingType;
 
 import java.time.LocalDate;
 
 public class Housing extends CarbonConsumption {
 
-    private Integer energyConsumption;
+    private Double energyConsumption;
     private HousingType housingType;
+    private Double impact;
 
-    public Housing(Double volume, Integer energyConsumption, HousingType typeEnergy, LocalDate startDate, LocalDate endDate, Integer userId) {
+    public Housing(Double volume, Double energyConsumption, HousingType typeEnergy, LocalDate startDate, LocalDate endDate, Integer userId) {
         super(volume, startDate, endDate, userId, ConsumptionType.HOUSING);
         this.energyConsumption = energyConsumption;
         this.housingType = typeEnergy;
+        setImpact(typeEnergy);
     }
 
-    public Housing(Double volume, LocalDate startDate, LocalDate endDate, Integer userId, ConsumptionType consumptionType) {
-        super(volume, startDate, endDate, userId, consumptionType);
+    public Double getImpact() {
+        return impact;
     }
 
-    public Integer getEnergyConsumption() {
+    public void setImpact(HousingType impact) {
+        switch (impact){
+            case GAS:
+                this.impact = 2.0;
+                break;
+            case ELECTRICITY:
+                this.impact = 1.5;
+                break;
+        };
+    }
+
+
+    public Double getEnergyConsumption() {
         return energyConsumption;
     }
 
-    public void setEnergyConsumption(Integer energyConsumption) {
+    public void setEnergyConsumption(Double energyConsumption) {
         this.energyConsumption = energyConsumption;
     }
 
@@ -37,7 +52,7 @@ public class Housing extends CarbonConsumption {
     }
 
     @Override
-    public Integer calculateImpact() {
-        return 0;
+    public Double calculateImpact() {
+        return getVolume() * getImpact() * getEnergyConsumption();
     }
 }

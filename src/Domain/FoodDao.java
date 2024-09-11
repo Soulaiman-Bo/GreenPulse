@@ -93,8 +93,8 @@ public class FoodDao extends ConsumptionDAO{
     } // Not Implemented
 
     @Override
-    public List<CarbonConsumption> findAll(Integer userId) throws SQLException {
-        return DatabasOperations.executeQuery(
+    public Optional<List<CarbonConsumption> > findAll(Integer userId) throws SQLException {
+        return Optional.ofNullable(DatabasOperations.executeQuery(
                 SELECT_ALL_FOOD_CONSUMPTIONS_BY_USER_ID,
                 preparedStatement -> {
                     try {
@@ -123,11 +123,11 @@ public class FoodDao extends ConsumptionDAO{
                     } catch (SQLException e) {
                         e.printStackTrace();
                     }
-                    return consumptions;
+                    return consumptions.isEmpty() ? null : consumptions;
                 },
                 "Consumptions Fetched successfully!",
                 "Failed to fetch Consumptions!"
-        );
+        ));
     }
 
 

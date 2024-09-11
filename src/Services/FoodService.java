@@ -40,8 +40,7 @@ public class FoodService extends ConsumptionService {
     } // Not Implemented
 
     @Override
-    public List<CarbonConsumption> findAll(Integer userId) throws SQLException {
-        List<CarbonConsumption> consumption =  consumptionDAO.findAll(10);
-        return consumption;
+    public Optional<List<CarbonConsumption>> findAll(Integer userId) throws SQLException {
+        return consumptionDAO.findAll(userId);
     }
 }

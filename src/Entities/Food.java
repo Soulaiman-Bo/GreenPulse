@@ -9,11 +9,28 @@ public class Food extends CarbonConsumption{
 
     private FoodType foodType;
     private Double weight;
+    private Double impact;
 
     public Food(Double volume, FoodType typeFood, Double weight, LocalDate startDate, LocalDate endDate, Integer userId) {
         super(volume, startDate, endDate, userId, ConsumptionType.FOOD);
         this.foodType = typeFood;
         this.weight = weight;
+        setImpact(typeFood);
+    }
+
+    public Double getImpact() {
+        return impact;
+    }
+
+    public void setImpact(FoodType impact) {
+        switch (impact){
+            case MEAT:
+                    this.impact = 5.0;
+                break;
+            case VEGETABLES:
+                    this.impact = 0.5;
+                break;
+        };
     }
 
     public Food(Double volume, LocalDate startDate, LocalDate endDate, Integer userId, ConsumptionType consumptionType) {
@@ -37,7 +54,7 @@ public class Food extends CarbonConsumption{
     }
 
     @Override
-    public Integer calculateImpact() {
-        return 0;
+    public Double calculateImpact() {
+        return  weight * getVolume() * getImpact();
     }
 }
