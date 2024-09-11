@@ -12,7 +12,7 @@ public abstract class ConsumptionService {
     public abstract Optional<CarbonConsumption> find(Integer userId) throws SQLException ;
     public abstract  Boolean update(CarbonConsumption consumption) throws SQLException ;
     public abstract Boolean delete(Integer user) throws SQLException ;
-    public abstract Optional<List<CarbonConsumption>> findAll(Integer userId) throws SQLException ;
+    public abstract Optional<List<CarbonConsumption>> findAll() throws SQLException ;
 
 
   //  public void save(CarbonConsumption consumption) {

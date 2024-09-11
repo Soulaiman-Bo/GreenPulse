@@ -20,6 +20,7 @@ public class TransportDao extends ConsumptionDAO{
     private static final String CREATE_TRANSPORT_CONSUMPTION_QUERY = "INSERT INTO javaschema.transport (amount, start_date, end_date, type, user_id, distance, vehicule_type) VALUES (?, ?, ?, ?, ?, ?, ?)";
     private static final String SELECT_TRANSPORT_CONSUMPTION_BY_ID = "SELECT * FROM javaschema.transport WHERE id = ?";
     private static final String SELECT_ALL_TRANSPORT_CONSUMPTIONS_BY_USER_ID = "SELECT * FROM javaschema.transport WHERE user_id = ?";
+    private static final String SELECT_ALL_TRANSPORT_CONSUMPTIONS = "SELECT * FROM javaschema.transport";
     private static final String DELETE_TRANSPORT_CONSUMPTION_SQL = "DELETE FROM javaschema.transport WHERE id = ?";
     private static final String UPDATE_TRANSPORT_CONSUMPTION_SQL = "UPDATE javaschema.transport SET amount = ?, start_date = ?, end_date = ?, type = ?, user_id = ?, distance = ?, vehicule_type = ?  WHERE id = ?";
 
@@ -105,15 +106,10 @@ public class TransportDao extends ConsumptionDAO{
     } // Not Implemented
 
     @Override
-    public Optional<List<CarbonConsumption>> findAll(Integer userId) throws SQLException {
+    public Optional<List<CarbonConsumption>> findAll() throws SQLException {
         return Optional.ofNullable(DatabasOperations.executeQuery(
-                SELECT_ALL_TRANSPORT_CONSUMPTIONS_BY_USER_ID,
+                SELECT_ALL_TRANSPORT_CONSUMPTIONS,
                 preparedStatement -> {
-                    try {
-                        preparedStatement.setInt(1, userId);
-                    } catch (SQLException e) {
-                        e.printStackTrace();
-                    }
                 },
                 rs -> {
                     List<CarbonConsumption> consumptions = new ArrayList<>();
@@ -124,10 +120,8 @@ public class TransportDao extends ConsumptionDAO{
                             Integer id = rs.getInt("user_id");
                             LocalDate startDate = rs.getDate("start_date").toLocalDate();
                             LocalDate endDate = rs.getDate("end_date").toLocalDate();
-                            String foodType = rs.getString("food_type");
-                            Double weight = rs.getDouble("weight");
                             Double amount = rs.getDouble("amount");
-                            String transportType = rs.getString("transport_type");
+                            String transportType = rs.getString("vehicule_type");
                             Double distance = rs.getDouble("distance");
 
                             consumptions.add( new Transport(
@@ -148,5 +142,45 @@ public class TransportDao extends ConsumptionDAO{
         ));
     }
 
+    public Optional<List<CarbonConsumption>> findAllById(Integer userId) throws SQLException {
+        return Optional.ofNullable(DatabasOperations.executeQuery(
+                SELECT_ALL_TRANSPORT_CONSUMPTIONS_BY_USER_ID,
+                preparedStatement -> {
+                    try {
+                        preparedStatement.setInt(1, userId);
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+                },
+                rs -> {
+                    List<CarbonConsumption> consumptions = new ArrayList<>();
+
+                    try {
+                        while (rs.next()) {
+                            String type = rs.getString("type");
+                            Integer id = rs.getInt("user_id");
+                            LocalDate startDate = rs.getDate("start_date").toLocalDate();
+                            LocalDate endDate = rs.getDate("end_date").toLocalDate();
+                            Double amount = rs.getDouble("amount");
+                            String transportType = rs.getString("vehicule_type");
+                            Double distance = rs.getDouble("distance");
+
+                            consumptions.add( new Transport(
+                                    amount,
+                                    distance,
+                                    TransportType.valueOf(transportType),
+                                    startDate,
+                                    endDate,
+                                    id));
+                        }
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+                    return consumptions.isEmpty() ? null : consumptions;
+                },
+                "Consumptions Fetched successfully!",
+                "Failed to fetch Consumptions!"
+        ));
+    }
 
 }

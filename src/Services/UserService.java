@@ -4,6 +4,7 @@ import Domain.UserDAO;
 import Entities.User;
 import Utils.ConsolePrinter;
 
+import java.sql.SQLException;
 import java.util.*;
 
 public class UserService {
@@ -40,6 +41,16 @@ public class UserService {
             users.get().forEach(System.out::println);
         } else {
             ConsolePrinter.printInfo("No users exist.");
+        }
+    }
+
+    public Optional<User> findById(Integer id) {
+        Optional<User> user = userDAO.findById(id);
+        if (user.isPresent()) {
+            return user;
+        } else {
+            ConsolePrinter.printInfo("No users exist.");
+            return Optional.empty();
         }
     }
 

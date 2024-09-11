@@ -19,7 +19,8 @@ public class HousingDao extends ConsumptionDAO{
 
     private static final String CREATE_HOUSING_CONSUMPTION_QUERY = "INSERT INTO javaschema.housing (amount, start_date, end_date, type, user_id, energy_type, energy) VALUES (?, ?, ?, ?, ?, ?, ?)";
     private static final String SELECT_HOUSING_CONSUMPTION_BY_ID = "SELECT * FROM javaschema.housing WHERE id = ?";
-    private static final String SELECT_ALL_HOUSING_CONSUMPTIONS_BY_USER_ID = "SELECT * FROM housing.transport WHERE user_id = ?";
+    private static final String SELECT_ALL_HOUSING_CONSUMPTIONS_BY_USER_ID = "SELECT * FROM javaschema.housing WHERE user_id = ?";
+    private static final String SELECT_ALL_HOUSING_CONSUMPTIONS = "SELECT * FROM javaschema.housing";
     private static final String DELETE_HOUSING_CONSUMPTION_SQL = "DELETE FROM javaschema.housing WHERE id = ?";
     private static final String UPDATE_HOUSING_CONSUMPTION_SQL = "UPDATE javaschema.housing SET amount = ?, start_date = ?, end_date = ?, type = ?, user_id = ?, distance = ?, vehicule_type = ?  WHERE id = ?";
 
@@ -105,7 +106,45 @@ public class HousingDao extends ConsumptionDAO{
     } // Not Implemented
 
     @Override
-    public Optional<List<CarbonConsumption>>  findAll(Integer userId) throws SQLException {
+    public Optional<List<CarbonConsumption>>  findAll() throws SQLException {
+        return Optional.ofNullable(DatabasOperations.executeQuery(
+                SELECT_ALL_HOUSING_CONSUMPTIONS,
+                preparedStatement -> {
+
+                },
+                rs -> {
+                    List<CarbonConsumption> consumptions = new ArrayList<>();
+
+                    try {
+                        while (rs.next()) {
+
+                            Integer id = rs.getInt("user_id");
+                            String type = rs.getString("type");
+                            LocalDate startDate = rs.getDate("start_date").toLocalDate();
+                            LocalDate endDate = rs.getDate("end_date").toLocalDate();
+                            Double amount = rs.getDouble("amount");
+                            String housingtType = rs.getString("energy_type");
+                            Double energy = rs.getDouble("energy");
+
+                            consumptions.add(  new Housing(
+                                    amount,
+                                    energy,
+                                    HousingType.valueOf(housingtType),
+                                    startDate,
+                                    endDate,
+                                    id));
+                        }
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+                    return consumptions.isEmpty() ? null : consumptions;
+                },
+                "Consumptions Fetched successfully!",
+                "Failed to fetch Consumptions!"
+        ));
+    }
+
+    public Optional<List<CarbonConsumption>>  findAllById(Integer userId) throws SQLException {
         return Optional.ofNullable(DatabasOperations.executeQuery(
                 SELECT_ALL_HOUSING_CONSUMPTIONS_BY_USER_ID,
                 preparedStatement -> {
@@ -125,10 +164,8 @@ public class HousingDao extends ConsumptionDAO{
                             String type = rs.getString("type");
                             LocalDate startDate = rs.getDate("start_date").toLocalDate();
                             LocalDate endDate = rs.getDate("end_date").toLocalDate();
-                            String foodType = rs.getString("food_type");
-                            Double weight = rs.getDouble("weight");
                             Double amount = rs.getDouble("amount");
-                            String transportType = rs.getString("transport_type");
+                            String transportType = rs.getString("energy_type");
                             Double energy = rs.getDouble("energy");
 
                             consumptions.add(  new Housing(

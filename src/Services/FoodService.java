@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 public class FoodService extends ConsumptionService {
+
     ConsumptionDAO consumptionDAO = new FoodDao();
 
     public Boolean save(CarbonConsumption consumption) {
@@ -40,7 +41,7 @@ public class FoodService extends ConsumptionService {
     } // Not Implemented
 
     @Override
-    public Optional<List<CarbonConsumption>> findAll(Integer userId) throws SQLException {
-        return consumptionDAO.findAll(userId);
+    public Optional<List<CarbonConsumption>> findAll() throws SQLException {
+        return consumptionDAO.findAll();
     }
 }

@@ -39,7 +39,7 @@ import java.util.Optional;
     } // Not Implemented
 
     @Override
-    public Optional<List<CarbonConsumption>> findAll(Integer userId) throws SQLException {
-        return consumptionDAO.findAll(userId);
+    public Optional<List<CarbonConsumption>> findAll() throws SQLException {
+        return consumptionDAO.findAll();
     }
 }

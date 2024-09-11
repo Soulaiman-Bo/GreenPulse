@@ -18,5 +18,5 @@ public abstract class ConsumptionDAO {
     public abstract Optional<CarbonConsumption> find(Integer id) throws SQLException ;
     public abstract Boolean update(CarbonConsumption consumption) throws SQLException ;
     public abstract Boolean delete(Integer id) throws SQLException ;
-    public abstract Optional<List<CarbonConsumption> > findAll(Integer userId) throws SQLException ;
+    public abstract Optional<List<CarbonConsumption> > findAll() throws SQLException ;
 }

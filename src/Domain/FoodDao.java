@@ -16,6 +16,7 @@ public class FoodDao extends ConsumptionDAO{
     private static final String CREATE_FOOD_CONSUMPTION_QUERY = "INSERT INTO javaschema.food (amount, start_date, end_date, type, user_id, food_type, weight) VALUES (?, ?, ?, ?, ?, ?, ?)";
     private static final String SELECT_FOOD_CONSUMPTION_BY_ID = "SELECT * FROM javaschema.food WHERE id = ?";
     private static final String SELECT_ALL_FOOD_CONSUMPTIONS_BY_USER_ID = "SELECT * FROM javaschema.food WHERE user_id = ?";
+    private static final String SELECT_ALL_FOOD_CONSUMPTIONS = "SELECT * FROM javaschema.food";
     private static final String DELETE_FOOD_CONSUMPTION_SQL = "DELETE FROM javaschema.food WHERE id = ?";
     private static final String UPDATE_FOOD_CONSUMPTION_SQL = "UPDATE javaschema.food SET amount = ?, start_date = ?, end_date = ?, type = ?, user_id = ?  WHERE id = ?";
 
@@ -92,8 +93,8 @@ public class FoodDao extends ConsumptionDAO{
         return Boolean.TRUE;
     } // Not Implemented
 
-    @Override
-    public Optional<List<CarbonConsumption> > findAll(Integer userId) throws SQLException {
+
+    public Optional<List<CarbonConsumption> > findAllById(Integer userId) throws SQLException {
         return Optional.ofNullable(DatabasOperations.executeQuery(
                 SELECT_ALL_FOOD_CONSUMPTIONS_BY_USER_ID,
                 preparedStatement -> {
@@ -110,6 +111,38 @@ public class FoodDao extends ConsumptionDAO{
                         while (rs.next()) {
                             int id = rs.getInt("id");
                             // ConsumptionType consumptionType = ConsumptionType.valueOf(rs.getString("type"));
+                            Double amount = rs.getDouble("amount");
+                            LocalDate start_date = rs.getDate("start_date").toLocalDate();
+                            LocalDate end_date = rs.getDate("end_date").toLocalDate();
+                            String foodType = rs.getString("food_type");
+                            Double weight = rs.getDouble("weight");
+                            int user_id = rs.getInt("user_id");
+
+                            consumptions.add(new Food(amount, FoodType.valueOf(foodType), weight , start_date, end_date, user_id));
+
+                        }
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+                    return consumptions.isEmpty() ? null : consumptions;
+                },
+                "Consumptions Fetched successfully!",
+                "Failed to fetch Consumptions!"
+        ));
+    }
+
+    @Override
+    public Optional<List<CarbonConsumption> > findAll() throws SQLException {
+        return Optional.ofNullable(DatabasOperations.executeQuery(
+                SELECT_ALL_FOOD_CONSUMPTIONS,
+                preparedStatement -> {
+                },
+                rs -> {
+                    List<CarbonConsumption> consumptions = new ArrayList<>();
+
+                    try {
+                        while (rs.next()) {
+                            int id = rs.getInt("id");
                             Double amount = rs.getDouble("amount");
                             LocalDate start_date = rs.getDate("start_date").toLocalDate();
                             LocalDate end_date = rs.getDate("end_date").toLocalDate();
