@@ -16,14 +16,18 @@ public class ConsolePrinter {
 
     public static void carbonMenu(){
         System.out.println(" +--------------------------------------+");
-        System.out.println(" |     Carbon FingerPrint Management    |");
-        System.out.println(" +--------------------------------------+");
-        System.out.println(" |  1. Add Carbon Consumption           |");
-        System.out.println(" |  2. Get Total Carbon Consumption     |");
-        System.out.println(" |  3. Get All Carbon Consumption       |");
-        System.out.println(" |  4. Get Carbon Consumption Report    |");
-        System.out.println(" |  5. Exit                             |");
-        System.out.println(" +--------------------------------------+");
+        System.out.println(" |     Carbon FingerPrint Management       |");
+        System.out.println(" +-----------------------------------------+");
+        System.out.println(" |  1. Add Carbon Consumption              |");
+        System.out.println(" |  2. Get Total Carbon Consumption        |");
+        System.out.println(" |  3. Get All Carbon Consumption          |");
+        System.out.println(" |  4. Get Carbon Consumption Report       |");
+        System.out.println(" |  5. Get Users over 3000 KgCO2eq         |");
+        System.out.println(" |  6. Get Average Consumption By period   |");
+        System.out.println(" |  7. Get Inactive users By period        |");
+        System.out.println(" |  8. Get Users ordred By Consumption     |");
+        System.out.println(" |  9. Exit                                |");
+        System.out.println(" +-----------------------------------------+");
         System.out.print("  ==> Enter your choice: ");
     }
 

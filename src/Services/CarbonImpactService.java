@@ -35,5 +35,52 @@ public class CarbonImpactService {
                 .collect(Collectors.toList());
     }
 
+    public List<User> getUsersWithHighImpactTwo() throws SQLException {
+        List<User> allUsers = userDao.findAll().orElseThrow(() -> new SQLException("Failed to fetch users"));
+
+        return allUsers.stream()
+                .filter(user -> {
+                    try {
+                        double totalImpact = calculateTotalImpact(user.getId());
+                        return totalImpact > 3000;
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                        return false;
+                    }
+                })
+                .collect(Collectors.toList());
+    }
+
+    public List<User> getUsersWithHighImpact() throws SQLException {
+        List<User> allUsers = userDao.findAll().orElseThrow(() -> new SQLException("Failed to fetch users"));
+        Map<Integer, Double> userImpacts = calculateTotalImpacts();
+
+        return allUsers.stream()
+                .filter(user -> userImpacts.getOrDefault(user.getId(), 0.0) > 3000)
+                .collect(Collectors.toList());
+    }
+
+    private Map<Integer, Double> calculateTotalImpacts() throws SQLException {
+        List<CarbonConsumption> allConsumptions = getAllConsumptions();
+
+        return allConsumptions.stream()
+                .collect(Collectors.groupingBy(
+                        CarbonConsumption::getUserId,
+                        Collectors.summingDouble(CarbonConsumption::calculateImpact)
+                ));
+    }
+
+    private double calculateTotalImpact(int userId) throws SQLException {
+        List<CarbonConsumption> foodConsumptions = foodDao.findAllById(userId).orElse(List.of());
+        List<CarbonConsumption> housingConsumptions = housingDao.findAllById(userId).orElse(List.of());
+        List<CarbonConsumption> transportConsumptions = transportDao.findAllById(userId).orElse(List.of());
+
+        return Stream.of(foodConsumptions, housingConsumptions, transportConsumptions)
+                .flatMap(List::stream)
+                .mapToDouble(CarbonConsumption::calculateImpact)
+                .sum();
+    }
+
+
 
 }

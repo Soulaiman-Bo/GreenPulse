@@ -2,22 +2,19 @@ package Utils;
 
 import Domain.ConsumptionDAO;
 import Domain.FoodDao;
-import Entities.CarbonConsumption;
-import Entities.Food;
-import Entities.Housing;
-import Entities.Transport;
+import Entities.*;
+import Entities.enums.ConsumptionType;
 import Entities.enums.FoodType;
 import Entities.enums.HousingType;
 import Entities.enums.TransportType;
-import Services.ConsumptionService;
-import Services.FoodService;
-import Services.UserService;
+import Services.*;
 
 import java.lang.reflect.InvocationTargetException;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Optional;
 import java.util.Scanner;
 
 public class CarbonView {
@@ -44,6 +41,18 @@ public class CarbonView {
                     getCarbonConsumptionReport(scanner);
                     break;
                 case 5:
+                    //
+                    break;
+                case 6:
+                    //
+                    break;
+                case 7:
+                    //
+                    break;
+                case 8:
+                    //
+                    break;
+                case 9:
                     ConsolePrinter.printInfo("Exiting...");
                     break carbonLoop;
                 default:
@@ -82,7 +91,10 @@ public class CarbonView {
                 scanner.nextLine();
                 System.out.print(" ==> Entre Transport Type: ");
                 String transportType = scanner.nextLine();
+
                 CarbonConsumption transportConsumption = new Transport(amount, distanceTravelled, TransportType.valueOf(transportType), LocalDate.parse(startDate, formatter), LocalDate.parse(endDate, formatter), id);
+                TransportService transportService = new TransportService();
+                transportService.save(transportConsumption);
 
                 break;
             case 2:
@@ -96,6 +108,8 @@ public class CarbonView {
                 String housingType = scanner.nextLine();
 
                 CarbonConsumption housingConsumption = new Housing(amountt, energyConsumption, HousingType.valueOf(housingType), LocalDate.parse(startDate, formatter), LocalDate.parse(endDate, formatter), id);
+                HousingService housingService = new HousingService();
+                housingService.save(housingConsumption);
 
                 break;
             case  3:
@@ -133,23 +147,12 @@ public class CarbonView {
 
     public static void getAllCarbonConsumptions(Scanner scanner){
         System.out.print("Enter user ID: ");
-        String id = scanner.nextLine();
+        Integer id = scanner.nextInt();
+        scanner.nextLine();
 
-//        if (!userService.userExists(id)) {
-//            System.out.println("Entities.User not found.");
-//            return;
-//        }
-//
-//        List<CarbonConsumption> consumptions = userService.getConsumptions(id);
-//
-//
-//        for (CarbonConsumption c : consumptions) {
-//            System.out.println(
-//                    "Volume: " + c.getVolume() + "\n" +
-//                            "Start Date: " + c.getStartDate()+ "\n" +
-//                            "End Date: " + c.getEndDate()+ "\n"
-//            );
-//        }
+        UserService userService = new UserService();
+        Optional<User> user = userService.findById(id);
+
 
     }
 

@@ -1,7 +1,12 @@
 
+import Domain.FoodDao;
+import Domain.HousingDao;
+import Domain.TransportDao;
+import Domain.UserDAO;
 import Entities.*;
 import Entities.enums.HousingType;
 import Entities.enums.TransportType;
+import Services.CarbonImpactService;
 import Services.FoodService;
 import Services.HousingService;
 import Services.TransportService;
@@ -33,33 +38,29 @@ public class Main {
                 case 3:
                     ConsolePrinter.printInfo("Exiting...");
                     System.exit(0);
+                    break;
                 case 4:
-//                    TransportService transportService = new TransportService();
-//
-//                            CarbonConsumption consumption = new Transport(
-//                            22.22,
-//                            33,
-//                            TransportType.TRAIN,
-//                            LocalDate.of(2024, 12, 3),
-//                            LocalDate.of(2024, 11, 3),
-//                            10);
-//
-//                           Boolean result =  transportService.save(consumption);
-//                           System.out.println(result);
+                    FoodDao foodDao = new FoodDao();
+                    TransportDao transportDao = new TransportDao();
+                    HousingDao housingDao = new HousingDao();
+                    UserDAO userDao = new UserDAO();
 
-                                        HousingService transportService = new HousingService();
+                    CarbonImpactService service = new CarbonImpactService(foodDao, transportDao, housingDao, userDao);
 
-                            CarbonConsumption consumption = new Housing(
-                            22.22,
-                            33.2,
-                            HousingType.ELECTRICITY,
-                            LocalDate.of(2024, 12, 3),
-                            LocalDate.of(2024, 11, 3),
-                            10);
+                    try {
+//                        List<User> highImpactUsers = service.getUsersWithHighImpact();
+//                        highImpactUsers.forEach(user -> System.out.println(user.getFullName()));
 
-                           Boolean result =  transportService.save(consumption);
-                           System.out.println(result);
-                    
+//                        List<CarbonConsumption> consumptions = service.getAllConsumptions();
+//                        consumptions.forEach(consumption -> System.out.println(consumption.getUserId()));
+
+                        List<User> highImpactUsers = service.getUsersWithHighImpact();
+                        highImpactUsers.forEach(user -> System.out.println(user.getFull_name() + " has a high impact"));
+
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+                    break;
                     
                 default:
                     ConsolePrinter.printError("Invalid choice. Please try again.");
