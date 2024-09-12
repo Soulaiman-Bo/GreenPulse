@@ -43,4 +43,9 @@ public class HousingService extends ConsumptionService {
     public Optional<List<CarbonConsumption>> findAll() throws SQLException {
         return consumptionDAO.findAll();
     }
+    @Override
+    public Optional<List<CarbonConsumption>> findAllById(Integer id) throws SQLException {
+        return consumptionDAO.findAllById(id);
+    }
+
 }

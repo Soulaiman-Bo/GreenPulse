@@ -54,4 +54,14 @@ public class UserService {
         }
     }
 
+    public Optional<List<User>> findAll() {
+        Optional<List<User>> users = userDAO.findAll();
+        if (users.isPresent()) {
+            return users;
+        } else {
+            ConsolePrinter.printInfo("No users exist.");
+            return Optional.empty();
+        }
+    }
+
 }

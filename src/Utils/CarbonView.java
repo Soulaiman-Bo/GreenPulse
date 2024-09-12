@@ -1,15 +1,11 @@
 package Utils;
 
-import Domain.ConsumptionDAO;
-import Domain.FoodDao;
 import Entities.*;
-import Entities.enums.ConsumptionType;
 import Entities.enums.FoodType;
 import Entities.enums.HousingType;
 import Entities.enums.TransportType;
 import Services.*;
 
-import java.lang.reflect.InvocationTargetException;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -41,7 +37,7 @@ public class CarbonView {
                     getCarbonConsumptionReport(scanner);
                     break;
                 case 5:
-                    //
+                    getHighImpactUsers();
                     break;
                 case 6:
                     //
@@ -50,7 +46,7 @@ public class CarbonView {
                     //
                     break;
                 case 8:
-                    //
+                    getUserImpactOrdered();
                     break;
                 case 9:
                     ConsolePrinter.printInfo("Exiting...");
@@ -192,5 +188,36 @@ public class CarbonView {
         }
 
     }
+
+    public static void getHighImpactUsers() throws SQLException {
+        FoodService foodDao = new FoodService();
+        TransportService transportDao = new TransportService();
+        HousingService housingDao = new HousingService();
+        UserService userDao = new UserService();
+
+        CarbonImpactService service = new CarbonImpactService(foodDao, transportDao, housingDao, userDao);
+
+        List<User> highImpactUsers = service.getUsersWithHighImpact();
+        highImpactUsers.forEach(user -> System.out.println(user.getFull_name() + " has a high impact"));
+
+    }
+
+    public static void getUserImpactOrdered() throws SQLException {
+        FoodService foodDao = new FoodService();
+        TransportService transportDao = new TransportService();
+        HousingService housingDao = new HousingService();
+        UserService userDao = new UserService();
+
+        CarbonImpactService service = new CarbonImpactService(foodDao, transportDao, housingDao, userDao);
+        List<UserWithImpact> orderedUsers = service.getUsersOrderedByImpact();
+        orderedUsers.forEach(userImpact -> {
+            User user = userImpact.getUser();
+            Double impact = userImpact.getImpact();
+            String fullName = user.getFull_name();
+            int userId = user.getId();
+            System.out.println("ID: " + userId + ", Full Name: " + fullName + ", Impact: " + impact);
+        });
+    }
+
 
 }

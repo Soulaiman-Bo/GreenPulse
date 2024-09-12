@@ -42,4 +42,8 @@ import java.util.Optional;
     public Optional<List<CarbonConsumption>> findAll() throws SQLException {
         return consumptionDAO.findAll();
     }
+
+    public Optional<List<CarbonConsumption>> findAllById(Integer id) throws SQLException {
+            return consumptionDAO.findAllById(id);
+    }
 }

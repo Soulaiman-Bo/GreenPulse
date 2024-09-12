@@ -1,8 +1,12 @@
 package Domain;
 
 import Entities.*;
+import Entities.enums.FoodType;
+import Utils.DatabasOperations;
 
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,4 +23,5 @@ public abstract class ConsumptionDAO {
     public abstract Boolean update(CarbonConsumption consumption) throws SQLException ;
     public abstract Boolean delete(Integer id) throws SQLException ;
     public abstract Optional<List<CarbonConsumption> > findAll() throws SQLException ;
+    public abstract Optional<List<CarbonConsumption>> findAllById(Integer userId) throws SQLException ;
 }

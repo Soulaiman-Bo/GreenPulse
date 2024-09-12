@@ -6,20 +6,23 @@ import Domain.TransportDao;
 import Domain.UserDAO;
 import Entities.CarbonConsumption;
 import Entities.User;
+import Utils.UserWithImpact;
 
 import java.sql.SQLException;
+import java.text.DecimalFormat;
+import java.util.AbstractMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class CarbonImpactService {
-    private FoodDao foodDao;
-    private TransportDao transportDao;
-    private HousingDao housingDao;
-    private UserDAO userDao;
+    private FoodService foodDao;
+    private TransportService transportDao;
+    private HousingService housingDao;
+    private UserService userDao;
 
-    public CarbonImpactService(FoodDao foodDao, TransportDao transportDao, HousingDao housingDao, UserDAO userDao) {
+    public CarbonImpactService(FoodService foodDao, TransportService transportDao, HousingService housingDao, UserService userDao) {
         this.foodDao = foodDao;
         this.transportDao = transportDao;
         this.housingDao = housingDao;
@@ -63,6 +66,8 @@ public class CarbonImpactService {
     private Map<Integer, Double> calculateTotalImpacts() throws SQLException {
         List<CarbonConsumption> allConsumptions = getAllConsumptions();
 
+        DecimalFormat formatter = new DecimalFormat("#,###.##");
+
         return allConsumptions.stream()
                 .collect(Collectors.groupingBy(
                         CarbonConsumption::getUserId,
@@ -80,6 +85,17 @@ public class CarbonImpactService {
                 .mapToDouble(CarbonConsumption::calculateImpact)
                 .sum();
     }
+
+    public List<UserWithImpact> getUsersOrderedByImpact() throws SQLException {
+        List<User> allUsers = userDao.findAll().orElseThrow(() -> new SQLException("Failed to fetch users"));
+        Map<Integer, Double> userImpacts = calculateTotalImpacts();
+
+        return allUsers.stream()
+                .map(user -> new UserWithImpact(user, userImpacts.getOrDefault(user.getId(), 0.0)))
+                .sorted((ui1, ui2) -> Double.compare(ui2.getImpact(), ui1.getImpact()))
+                .collect(Collectors.toList());
+    }
+
 
 
 

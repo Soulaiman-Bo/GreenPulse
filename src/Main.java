@@ -13,6 +13,7 @@ import Services.TransportService;
 import Utils.CarbonView;
 import Utils.ConsolePrinter;
 import Utils.UserView;
+import Utils.UserWithImpact;
 
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -40,26 +41,7 @@ public class Main {
                     System.exit(0);
                     break;
                 case 4:
-                    FoodDao foodDao = new FoodDao();
-                    TransportDao transportDao = new TransportDao();
-                    HousingDao housingDao = new HousingDao();
-                    UserDAO userDao = new UserDAO();
-
-                    CarbonImpactService service = new CarbonImpactService(foodDao, transportDao, housingDao, userDao);
-
-                    try {
-//                        List<User> highImpactUsers = service.getUsersWithHighImpact();
-//                        highImpactUsers.forEach(user -> System.out.println(user.getFullName()));
-
-//                        List<CarbonConsumption> consumptions = service.getAllConsumptions();
-//                        consumptions.forEach(consumption -> System.out.println(consumption.getUserId()));
-
-                        List<User> highImpactUsers = service.getUsersWithHighImpact();
-                        highImpactUsers.forEach(user -> System.out.println(user.getFull_name() + " has a high impact"));
-
-                    } catch (SQLException e) {
-                        e.printStackTrace();
-                    }
+                        //
                     break;
                     
                 default:

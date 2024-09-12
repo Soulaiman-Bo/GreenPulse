@@ -13,9 +13,9 @@ public abstract class ConsumptionService {
     public abstract  Boolean update(CarbonConsumption consumption) throws SQLException ;
     public abstract Boolean delete(Integer user) throws SQLException ;
     public abstract Optional<List<CarbonConsumption>> findAll() throws SQLException ;
+    public abstract Optional<List<CarbonConsumption>> findAllById(Integer id) throws SQLException ;
 
-
-  //  public void save(CarbonConsumption consumption) {
+    //  public void save(CarbonConsumption consumption) {
 //        ConsumptionDAO foodDAO = new FoodDao();
 //       try {
 //           consumptionDAO.createConsumption(consumption);
