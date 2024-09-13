@@ -6,9 +6,7 @@ import Utils.DateUtils;
 import Utils.UserWithImpact;
 
 import java.sql.SQLException;
-import java.text.DecimalFormat;
 import java.time.LocalDate;
-import java.util.AbstractMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -65,17 +63,6 @@ public class CarbonImpactService {
                 ));
     }
 
-    private double calculateTotalImpact(int userId) throws SQLException {
-        List<CarbonConsumption> foodConsumptions = foodService.findAllById(userId).orElse(List.of());
-        List<CarbonConsumption> housingConsumptions = housingService.findAllById(userId).orElse(List.of());
-        List<CarbonConsumption> transportConsumptions = transportService.findAllById(userId).orElse(List.of());
-
-        return Stream.of(foodConsumptions, housingConsumptions, transportConsumptions)
-                .flatMap(List::stream)
-                .mapToDouble(CarbonConsumption::calculateImpact)
-                .sum();
-    }
-
     public List<UserWithImpact> getUsersOrderedByImpact() throws SQLException {
         List<User> allUsers = userService.findAll().orElseThrow(() -> new SQLException("Failed to fetch users"));
         Map<Integer, Double> userImpacts = calculateTotalImpacts();
@@ -99,5 +86,25 @@ public class CarbonImpactService {
         return 0.0;
     }
 
+
+    public List<User> getInactiveUsers(LocalDate startDate, LocalDate endDate) throws SQLException {
+        List<User> allUsers = userService.findAll().orElseThrow(() -> new SQLException("Failed to fetch users"));
+        List<CarbonConsumption> allConsumptions = getAllConsumptions();
+
+        Map<Integer, List<CarbonConsumption>> userConsumptions = allConsumptions.stream()
+                .collect(Collectors.groupingBy(CarbonConsumption::getUserId));
+
+        return allUsers.stream()
+                .filter(user -> isUserInactive(user, userConsumptions.getOrDefault(user.getId(), List.of()), startDate, endDate))
+                .collect(Collectors.toList());
+    }
+
+    private boolean isUserInactive(User user, List<CarbonConsumption> consumptions, LocalDate startDate, LocalDate endDate) {
+        return consumptions.stream()
+                .noneMatch(consumption ->
+                        (consumption.getStartDate().isBefore(endDate) || consumption.getStartDate().isEqual(endDate)) &&
+                                (consumption.getEndDate().isAfter(startDate) || consumption.getEndDate().isEqual(startDate))
+                );
+    }
 
 }

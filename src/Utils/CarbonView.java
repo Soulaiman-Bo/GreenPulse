@@ -15,6 +15,11 @@ import java.util.Scanner;
 
 public class CarbonView {
 
+    static FoodService foodService = new FoodService();
+    static TransportService transportService = new TransportService();
+    static HousingService housingService = new HousingService();
+    static UserService userService = new UserService();
+
     public static void carbonFingerPrintManagement(Scanner scanner) throws SQLException {
 
         carbonLoop:
@@ -43,7 +48,7 @@ public class CarbonView {
                     getAverageConsumptionByPeriod(scanner);
                     break;
                 case 7:
-                    //
+                    getInActiveUsers(scanner);
                     break;
                 case 8:
                     getUserImpactOrdered();
@@ -87,7 +92,6 @@ public class CarbonView {
                 String transportType = scanner.nextLine();
 
                 CarbonConsumption transportConsumption = new Transport(amount, distanceTravelled, TransportType.valueOf(transportType), LocalDate.parse(startDate, formatter), LocalDate.parse(endDate, formatter), id);
-                TransportService transportService = new TransportService();
                 transportService.save(transportConsumption);
 
                 break;
@@ -102,7 +106,6 @@ public class CarbonView {
                 String housingType = scanner.nextLine();
 
                 CarbonConsumption housingConsumption = new Housing(amountt, energyConsumption, HousingType.valueOf(housingType), LocalDate.parse(startDate, formatter), LocalDate.parse(endDate, formatter), id);
-                HousingService housingService = new HousingService();
                 housingService.save(housingConsumption);
 
                 break;
@@ -116,7 +119,6 @@ public class CarbonView {
                 String foodType = scanner.nextLine();
 
                 CarbonConsumption foodConsumption = new Food(volume, FoodType.valueOf(foodType), weightConsumption , LocalDate.parse(startDate, formatter), LocalDate.parse(endDate, formatter), id);
-                FoodService foodService = new FoodService();
                 foodService.save(foodConsumption);
 
                 break;
@@ -131,7 +133,6 @@ public class CarbonView {
     public static void getTotalCarbonConsumption(Scanner scanner){
         System.out.print("Enter user ID: ");
         String id = scanner.nextLine();
-
 //        if (!userService.userExists(id)) {
 //            System.out.println("Entities.User not found.");
 //            return;
@@ -144,10 +145,7 @@ public class CarbonView {
         Integer id = scanner.nextInt();
         scanner.nextLine();
 
-        UserService userService = new UserService();
         Optional<User> user = userService.findById(id);
-
-
     }
 
     public static void getCarbonConsumptionReport(Scanner scanner){
@@ -188,12 +186,7 @@ public class CarbonView {
     }
 
     public static void getHighImpactUsers() throws SQLException {
-        FoodService foodDao = new FoodService();
-        TransportService transportDao = new TransportService();
-        HousingService housingDao = new HousingService();
-        UserService userDao = new UserService();
-
-        CarbonImpactService service = new CarbonImpactService(foodDao, transportDao, housingDao, userDao);
+        CarbonImpactService service = new CarbonImpactService(foodService, transportService, housingService, userService);
 
         List<User> highImpactUsers = service.getUsersWithHighImpact();
         highImpactUsers.forEach(user -> System.out.println(user.getFull_name() + " has a high impact"));
@@ -201,12 +194,7 @@ public class CarbonView {
     }
 
     public static void getUserImpactOrdered() throws SQLException {
-        FoodService foodDao = new FoodService();
-        TransportService transportDao = new TransportService();
-        HousingService housingDao = new HousingService();
-        UserService userDao = new UserService();
-
-        CarbonImpactService service = new CarbonImpactService(foodDao, transportDao, housingDao, userDao);
+        CarbonImpactService service = new CarbonImpactService(foodService, transportService, housingService, userService);
         List<UserWithImpact> orderedUsers = service.getUsersOrderedByImpact();
         orderedUsers.forEach(userImpact -> {
             User user = userImpact.getUser();
@@ -230,21 +218,30 @@ public class CarbonView {
         System.out.println(" ==> Enter End date and time (yyyy-MM-dd): ");
         String endDate = scanner.nextLine();
 
-        FoodService foodDao = new FoodService();
-        TransportService transportDao = new TransportService();
-        HousingService housingDao = new HousingService();
-        UserService userDao = new UserService();
-
-        Optional<User> user = userDao.findById(user_id);
-        CarbonImpactService service = new CarbonImpactService(foodDao, transportDao, housingDao, userDao);
+        Optional<User> user = userService.findById(user_id);
+        CarbonImpactService service = new CarbonImpactService(foodService, transportService, housingService, userService);
         List<CarbonConsumption> consumptions = service.getAllConsumptionsForUser(user_id);
         user.get().setCarbonConsumption(consumptions);
 
-       Double average =  service.getAverageByPeriod(user.get(), LocalDate.parse(startDate, formatter), LocalDate.parse(endDate, formatter));
+        Double average =  service.getAverageByPeriod(user.get(), LocalDate.parse(startDate, formatter), LocalDate.parse(endDate, formatter));
 
         System.out.println("User ID: " + user_id + " Average: " + average );
 
     }
 
+    public static void getInActiveUsers(Scanner scanner) throws SQLException {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
+        System.out.println(" ==> Enter Start date and time (yyyy-MM-dd): ");
+        String startDate = scanner.nextLine();
+
+        System.out.println(" ==> Enter End date and time (yyyy-MM-dd): ");
+        String endDate = scanner.nextLine();
+
+        CarbonImpactService service = new CarbonImpactService(foodService, transportService, housingService, userService);
+        List<User> users =  service.getInactiveUsers(LocalDate.parse(startDate, formatter), LocalDate.parse(endDate, formatter));
+
+        users.forEach(System.out::println);
+
+    }
 }

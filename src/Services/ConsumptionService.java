@@ -15,6 +15,7 @@ public abstract class ConsumptionService {
     public abstract Optional<List<CarbonConsumption>> findAll() throws SQLException ;
     public abstract Optional<List<CarbonConsumption>> findAllById(Integer id) throws SQLException ;
 
+
     //  public void save(CarbonConsumption consumption) {
 //        ConsumptionDAO foodDAO = new FoodDao();
 //       try {
