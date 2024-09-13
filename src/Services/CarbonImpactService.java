@@ -1,15 +1,13 @@
 package Services;
 
-import Domain.FoodDao;
-import Domain.HousingDao;
-import Domain.TransportDao;
-import Domain.UserDAO;
 import Entities.CarbonConsumption;
 import Entities.User;
+import Utils.DateUtils;
 import Utils.UserWithImpact;
 
 import java.sql.SQLException;
 import java.text.DecimalFormat;
+import java.time.LocalDate;
 import java.util.AbstractMap;
 import java.util.List;
 import java.util.Map;
@@ -17,45 +15,39 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class CarbonImpactService {
-    private FoodService foodDao;
-    private TransportService transportDao;
-    private HousingService housingDao;
-    private UserService userDao;
+    private final FoodService foodService;
+    private final TransportService transportService;
+    private final HousingService housingService;
+    private final UserService userService;
 
-    public CarbonImpactService(FoodService foodDao, TransportService transportDao, HousingService housingDao, UserService userDao) {
-        this.foodDao = foodDao;
-        this.transportDao = transportDao;
-        this.housingDao = housingDao;
-        this.userDao = userDao;
+    public CarbonImpactService(FoodService foodService, TransportService transportService, HousingService housingService, UserService userService) {
+        this.foodService = foodService;
+        this.transportService = transportService;
+        this.housingService = housingService;
+        this.userService = userService;
     }
 
     public List<CarbonConsumption> getAllConsumptions() throws SQLException {
         return Stream.of(
-                        foodDao.findAll().orElse(List.of()),
-                        transportDao.findAll().orElse(List.of()),
-                        housingDao.findAll().orElse(List.of())
+                        foodService.findAll().orElse(List.of()),
+                        transportService.findAll().orElse(List.of()),
+                        housingService.findAll().orElse(List.of())
                 ).flatMap(List::stream)
                 .collect(Collectors.toList());
     }
 
-    public List<User> getUsersWithHighImpactTwo() throws SQLException {
-        List<User> allUsers = userDao.findAll().orElseThrow(() -> new SQLException("Failed to fetch users"));
-
-        return allUsers.stream()
-                .filter(user -> {
-                    try {
-                        double totalImpact = calculateTotalImpact(user.getId());
-                        return totalImpact > 3000;
-                    } catch (SQLException e) {
-                        e.printStackTrace();
-                        return false;
-                    }
-                })
+    public List<CarbonConsumption> getAllConsumptionsForUser(int userId) throws SQLException {
+        return Stream.of(
+                        foodService.findAllById(userId).orElse(List.of()),
+                        transportService.findAllById(userId).orElse(List.of()),
+                        housingService.findAllById(userId).orElse(List.of())
+                )
+                .flatMap(List::stream)
                 .collect(Collectors.toList());
     }
 
     public List<User> getUsersWithHighImpact() throws SQLException {
-        List<User> allUsers = userDao.findAll().orElseThrow(() -> new SQLException("Failed to fetch users"));
+        List<User> allUsers = userService.findAll().orElseThrow(() -> new SQLException("Failed to fetch users"));
         Map<Integer, Double> userImpacts = calculateTotalImpacts();
 
         return allUsers.stream()
@@ -66,8 +58,6 @@ public class CarbonImpactService {
     private Map<Integer, Double> calculateTotalImpacts() throws SQLException {
         List<CarbonConsumption> allConsumptions = getAllConsumptions();
 
-        DecimalFormat formatter = new DecimalFormat("#,###.##");
-
         return allConsumptions.stream()
                 .collect(Collectors.groupingBy(
                         CarbonConsumption::getUserId,
@@ -76,9 +66,9 @@ public class CarbonImpactService {
     }
 
     private double calculateTotalImpact(int userId) throws SQLException {
-        List<CarbonConsumption> foodConsumptions = foodDao.findAllById(userId).orElse(List.of());
-        List<CarbonConsumption> housingConsumptions = housingDao.findAllById(userId).orElse(List.of());
-        List<CarbonConsumption> transportConsumptions = transportDao.findAllById(userId).orElse(List.of());
+        List<CarbonConsumption> foodConsumptions = foodService.findAllById(userId).orElse(List.of());
+        List<CarbonConsumption> housingConsumptions = housingService.findAllById(userId).orElse(List.of());
+        List<CarbonConsumption> transportConsumptions = transportService.findAllById(userId).orElse(List.of());
 
         return Stream.of(foodConsumptions, housingConsumptions, transportConsumptions)
                 .flatMap(List::stream)
@@ -87,7 +77,7 @@ public class CarbonImpactService {
     }
 
     public List<UserWithImpact> getUsersOrderedByImpact() throws SQLException {
-        List<User> allUsers = userDao.findAll().orElseThrow(() -> new SQLException("Failed to fetch users"));
+        List<User> allUsers = userService.findAll().orElseThrow(() -> new SQLException("Failed to fetch users"));
         Map<Integer, Double> userImpacts = calculateTotalImpacts();
 
         return allUsers.stream()
@@ -96,7 +86,18 @@ public class CarbonImpactService {
                 .collect(Collectors.toList());
     }
 
+    public Double getAverageByPeriod(User user, LocalDate start , LocalDate endDate) {
+        if (!start.isAfter(endDate)) {
+            List<CarbonConsumption> consumptions = user.getCarbonConsumption();
+            List<LocalDate> dates = DateUtils.dateListRange(start, endDate);
 
+            return (consumptions
+                    .stream()
+                    .filter(e -> !DateUtils.verifyDateExistence(e.getStartDate(), e.getEndDate(), dates))
+                    .mapToDouble(CarbonConsumption::calculateImpact).sum()) / dates.size();
+        }
+        return 0.0;
+    }
 
 
 }

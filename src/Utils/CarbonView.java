@@ -40,7 +40,7 @@ public class CarbonView {
                     getHighImpactUsers();
                     break;
                 case 6:
-                    //
+                    getAverageConsumptionByPeriod(scanner);
                     break;
                 case 7:
                     //
@@ -75,8 +75,6 @@ public class CarbonView {
         ConsolePrinter.ConsumptionTypeMenu();
         int carbon = scanner.nextInt();
 
-
-        ConsumptionService consumptionService = null;
         switch (carbon){
             case 1:
                 System.out.print(" ==> Enter Amount: ");
@@ -217,6 +215,35 @@ public class CarbonView {
             int userId = user.getId();
             System.out.println("ID: " + userId + ", Full Name: " + fullName + ", Impact: " + impact);
         });
+    }
+
+    public static void getAverageConsumptionByPeriod(Scanner scanner) throws SQLException {
+        System.out.print("==> Enter User ID: ");
+        Integer user_id = scanner.nextInt();
+        scanner.nextLine();
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+        System.out.println(" ==> Enter Start date and time (yyyy-MM-dd): ");
+        String startDate = scanner.nextLine();
+
+        System.out.println(" ==> Enter End date and time (yyyy-MM-dd): ");
+        String endDate = scanner.nextLine();
+
+        FoodService foodDao = new FoodService();
+        TransportService transportDao = new TransportService();
+        HousingService housingDao = new HousingService();
+        UserService userDao = new UserService();
+
+        Optional<User> user = userDao.findById(user_id);
+        CarbonImpactService service = new CarbonImpactService(foodDao, transportDao, housingDao, userDao);
+        List<CarbonConsumption> consumptions = service.getAllConsumptionsForUser(user_id);
+        user.get().setCarbonConsumption(consumptions);
+
+       Double average =  service.getAverageByPeriod(user.get(), LocalDate.parse(startDate, formatter), LocalDate.parse(endDate, formatter));
+
+        System.out.println("User ID: " + user_id + " Average: " + average );
+
     }
 
 

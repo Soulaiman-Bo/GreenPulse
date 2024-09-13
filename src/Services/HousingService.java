@@ -2,7 +2,6 @@ package Services;
 
 import Domain.ConsumptionDAO;
 import Domain.HousingDao;
-import Domain.TransportDao;
 import Entities.CarbonConsumption;
 
 import java.sql.SQLException;
